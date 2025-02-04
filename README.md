@@ -64,7 +64,7 @@ Those are the valid options for GroupBy:
 
 Application Command line parameters
 
-'''
+```
    -t config       - Config file section to use (tenancy profile)  
    -p proxy        - Set Proxy (i.e. www-proxy-server.com:80) 
    -ip             - Use Instance Principals for Authentication 
@@ -77,14 +77,14 @@ Application Command line parameters
    -service type   - Service Type default all, Services = all,compute,block,network,identity,loadbalancer,database,object,file
    -output         - list | json | summary
    -filter_by_name - Filter service by name, comma seperator for multi names
-'''
+```
 ### Exemplo de comando
 
 python tag_resources_tenancies.py -t DEFAULT -action list -cp ritm0023258pococrinssdiia  
 
 ## LISTANDO BUDGETS - CHAMADA PYTHON
 
-'''
+```
  import oci
  import sys
  // Default config file and profile
@@ -101,4 +101,4 @@ python tag_resources_tenancies.py -t DEFAULT -action list -cp ritm0023258pococri
   print('ListBudgets for compartment with OCID: {}'.format(compartment_id))
   for budget in budgets:
       print(budget)
-'''
+```
