@@ -9,24 +9,21 @@ CRIAR DIRETÓRIO .OCI
 
 Dentro do diretório .OCI, criar arquivo CONFIG com as seguintes informações:
 
+```
 [DEFAULT]
 user=<cid1.user.oc1.xxxxxxxxxxxxxxxxxxxxxx>
-
 fingerprint=<d:d0:cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx>
-
 tenancy=ocid1.tenancy.oc1..aaaaaaaatibiivijlqznqwwgrzxbx7ccsf4o4oxowqazkds7qurhtus6r6sa
-
 region=sa-saopaulo-1
-
 key_file=xxxxxxxxxxxxxx.pem
-
+```
 
 ## CRIANDO AMBIENTE
 
 no terminal powershell:
 
 - python -m venv .venv
-- .\.venv\Scripts\Activate.ps1  
+- .\\.venv\Scripts\Activate.ps1  
 - pip install -r requirements.txt
 
 
@@ -37,6 +34,7 @@ no terminal powershell:
 ## SHOWUSAGE 
 Application Command line parameters
 
+```
    -c config    - OCI CLI Config
    -t profile   - profile inside the config file
    -p proxy     - Set Proxy (i.e. www-proxy-server.com:80)
@@ -55,7 +53,7 @@ Those are the valid options for GroupBy:
    "tagNamespace", "tagKey", "tagValue", "service", "skuName", "skuPartNumber", "unit", "compartmentName",
    "compartmentPath", "compartmentId", "platform", "region", "logicalAd", "resourceId", "tenantId", "tenantName"
 
-
+```
 ### EXEMPLO DE COMANDO
  python showusage.py -ds 2025-01-01 -de 2025-01-20  -report SERVICE -t DEFAULT -csv 
 
