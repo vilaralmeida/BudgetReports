@@ -21,11 +21,11 @@ key_file=xxxxxxxxxxxxxx.pem
 ## CRIANDO AMBIENTE
 
 no terminal powershell:
-
+```
 - python -m venv .venv
 - .\\.venv\Scripts\Activate.ps1  
 - pip install -r requirements.txt
-
+```
 
 
 # UTILIZAÇÃO:
