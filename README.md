@@ -64,9 +64,10 @@ Those are the valid options for GroupBy:
 
 Application Command line parameters
 
-   -t config       - Config file section to use (tenancy profile)
-   -p proxy        - Set Proxy (i.e. www-proxy-server.com:80)
-   -ip             - Use Instance Principals for Authentication
+'''
+   -t config       - Config file section to use (tenancy profile)  
+   -p proxy        - Set Proxy (i.e. www-proxy-server.com:80) 
+   -ip             - Use Instance Principals for Authentication 
    -dt             - Use Instance Principals with delegation token for cloud shell
    -cp compartment - filter by compartment name or id
    -rg region      - filter by region name
@@ -76,34 +77,28 @@ Application Command line parameters
    -service type   - Service Type default all, Services = all,compute,block,network,identity,loadbalancer,database,object,file
    -output         - list | json | summary
    -filter_by_name - Filter service by name, comma seperator for multi names
-
+'''
 ### Exemplo de comando
 
 python tag_resources_tenancies.py -t DEFAULT -action list -cp ritm0023258pococrinssdiia  
 
 ## LISTANDO BUDGETS - CHAMADA PYTHON
 
-> import oci
-> import sys
-
-> // Default config file and profile
-
-> config = oci.config.from_file(file_location=".oci\\config")
-> budget_client = oci.budget.BudgetClient(config)
-
-> print(config)
-
-> // The first argument is the name of the script, so start the index at 1
-> compartment_id = config['tenancy']
-
-
-> print("Compartment Id: " + compartment_id)
-
-
-> // list all budgets
-> budgets = oci.pagination.list_call_get_all_results(
->     budget_client.list_budgets,
->     compartment_id).data
->  print('ListBudgets for compartment with OCID: {}'.format(compartment_id))
->  for budget in budgets:
->      print(budget)
+'''
+ import oci
+ import sys
+ // Default config file and profile
+ config = oci.config.from_file(file_location=".oci\\config")
+ budget_client = oci.budget.BudgetClient(config)
+ print(config)
+ // The first argument is the name of the script, so start the index at 1
+ compartment_id = config['tenancy']
+ print("Compartment Id: " + compartment_id)
+ // list all budgets
+ budgets = oci.pagination.list_call_get_all_results(
+     budget_client.list_budgets,
+     compartment_id).data
+  print('ListBudgets for compartment with OCID: {}'.format(compartment_id))
+  for budget in budgets:
+      print(budget)
+'''
