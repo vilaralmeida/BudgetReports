@@ -1,3 +1,2 @@
 oci
-jupyter-cache
-tinytex
+neo4j
