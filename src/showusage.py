@@ -1180,7 +1180,7 @@ def usage_special(usageClient, tenant_id, time_usage_started, time_usage_ended, 
             requestSummarizedUsagesDetails,
             retry_strategy=oci.retry.DEFAULT_RETRY_STRATEGY
         )
-
+        print(request_summarized_usages.data)    
         ################################
         # Add all data to array data
         ################################
@@ -1352,7 +1352,7 @@ def usage_resource(usageClient, tenant_id, time_usage_started, time_usage_ended,
             requestSummarizedUsagesDetails,
             retry_strategy=oci.retry.DEFAULT_RETRY_STRATEGY
         )
-
+        print(request_summarized_usages.data)
         ################################
         # Add all data to array data
         ################################
