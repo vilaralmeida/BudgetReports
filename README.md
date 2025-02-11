@@ -106,6 +106,12 @@ python tag_resources_tenancies.py -t DEFAULT -action list -cp ritm0023258pococri
 
 ## Instalando NEO4J:
 
+Importante:
+- Documentação APOC: https://neo4j.com/labs/apoc/4.1/
+- Documentação graph-data-science: https://neo4j.com/docs/graph-data-science/current/
+- Arquivos de configuração neo4j.conf em /var/lib/docker/
+
+
 ### Garantindo que não existem mais instancias rodando
 sudo docker stop $(sudo docker ps -a -q)
 sudo docker rm -fv $(sudo docker ps -aq)
@@ -114,7 +120,7 @@ sudo docker rm -fv $(sudo docker ps -aq)
 sudo docker compose --env-file env.dev up    # Rodar no mesmo diretorio do arquivo docker-compose
 
 ### Iniciando versão após instalação
-sudo docker start $(sudo docker ps -a -q)
+sudo docker restart $(sudo docker ps -a -q)
 
 
 ## REALIZANDO A CARGA DO BD DE GRAFO
