@@ -117,6 +117,10 @@ Importante:
 - sudo docker rm -fv $(sudo docker ps -aq)
 
 ### Subindo versão 
+
+Importante: Alterar o arquivo env.dev para alterar o endereço da variavel HOME
+
+
 sudo docker compose --env-file env.dev up    # Rodar no mesmo diretorio do arquivo docker-compose
 
 ### Iniciando versão após instalação
