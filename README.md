@@ -113,8 +113,8 @@ Importante:
 
 
 ### Garantindo que não existem mais instancias rodando
-sudo docker stop $(sudo docker ps -a -q)
-sudo docker rm -fv $(sudo docker ps -aq)
+- sudo docker stop $(sudo docker ps -a -q)
+- sudo docker rm -fv $(sudo docker ps -aq)
 
 ### Subindo versão 
 sudo docker compose --env-file env.dev up    # Rodar no mesmo diretorio do arquivo docker-compose
