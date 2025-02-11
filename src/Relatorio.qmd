@@ -1,0 +1,201 @@
+---
+title: "Relatório de Análise de Consumo de Produtos por Compartment"
+format: html
+---
+
+# Apresentação
+
+O Seguinte relatório tem por propósito apresentar a evolução dos Compartments (Nuvem Oracle OCI) e produtos consumidos pelos compartments.  
+
+
+## Como está a evolução de consumo de recursos por Compartment?
+
+```{python}
+#| label: fig-RJ_SANDBOX__CUSTOS_IAC
+#| fig-cap: "Consumo semanal de recursos por Região de Disponibilidade do Projeto PRJ_SANDBOX_IAC - Outubro/2024"
+#| echo: false
+#| warning: false
+from neo4j import GraphDatabase
+from dotenv import load_dotenv
+import os
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+from datetime import datetime
+# Carrega os parâmetros do arquivo env.dev
+load_dotenv()
+
+# URI examples: "neo4j://localhost", "neo4j+s://xxx.databases.neo4j.io"
+URI =os.getenv('NEO4J_URI')
+AUTH = (os.getenv('NEO4J_USER'), os.getenv('NEO4J_PASSWORD'))
+
+with GraphDatabase.driver(URI, auth=AUTH) as driver:
+    driver.verify_connectivity()
+
+
+driver = GraphDatabase.driver(URI, auth=AUTH)
+session = driver.session(database="neo4j")
+
+
+query = '''
+MATCH (c:Compartment)-[r:CONSUMIU]->(p:Product)
+RETURN c.name AS Compartment, r.date AS Date, COUNT(r) AS NumberOfConnections
+ORDER BY c.name, r.date
+'''
+
+
+records, summary, keys = driver.execute_query(query, )
+
+# Converte os registros em um DataFrame do pandas
+df = pd.DataFrame(records, columns=['Compartment', 'Date', 'NumberOfConnections'])
+
+
+
+# Converte a coluna Date para o tipo datetime
+df['Date'] = pd.to_datetime(df['Date'], format="%d/%m/%Y")
+
+
+# Cria um gráfico de linha mostrando a evolução dos relacionamentos CONSUMIU por Compartment por data
+plt.figure(figsize=(12, 6))
+sns.lineplot(data=df, x='Date', y='NumberOfConnections', hue='Compartment', marker='o')
+
+plt.title('Evolução da Quantidade de Relacionamentos CONSUMIU por Compartment por Data')
+plt.xlabel('Data')
+plt.ylabel('Número de Conexões')
+plt.legend(title='Compartment')
+plt.grid(True)
+plt.show()
+
+# session/driver usage
+session.close()
+driver.close()
+
+
+```
+
+
+```{python}
+#| label: fig-tbl_Conexoes_Compartment_Data
+#| fig-cap: "Tabela de Consumo de Produtos de Compartment por Data"
+#| echo: false
+#| warning: false
+from neo4j import GraphDatabase
+from dotenv import load_dotenv
+import os
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+from datetime import datetime
+# Carrega os parâmetros do arquivo env.dev
+load_dotenv()
+
+# URI examples: "neo4j://localhost", "neo4j+s://xxx.databases.neo4j.io"
+URI =os.getenv('NEO4J_URI')
+AUTH = (os.getenv('NEO4J_USER'), os.getenv('NEO4J_PASSWORD'))
+
+with GraphDatabase.driver(URI, auth=AUTH) as driver:
+    driver.verify_connectivity()
+
+
+driver = GraphDatabase.driver(URI, auth=AUTH)
+session = driver.session(database="neo4j")
+
+
+query = '''
+MATCH (c:Compartment)-[r:CONSUMIU]->(p:Product)
+RETURN c.name AS Compartment, r.date AS Date, COUNT(r) AS NumberOfConnections
+ORDER BY c.name, r.date
+'''
+
+
+records, summary, keys = driver.execute_query(query, )
+
+
+# Converte os registros em um DataFrame do pandas
+df = pd.DataFrame(records, columns=['Compartment', 'Date', 'NumberOfConnections'])
+
+# Cria uma figura e um eixo
+fig, ax = plt.subplots(figsize=(12, 6))
+
+# Oculta o eixo
+ax.axis('tight')
+ax.axis('off')
+
+# Cria a tabela
+table = ax.table(cellText=df.values, colLabels=df.columns, cellLoc='center', loc='center')
+
+# Ajusta o layout
+table.auto_set_font_size(False)
+table.set_fontsize(12)
+table.scale(1.2, 1.2)
+
+# Exibe a tabela
+plt.show()
+
+# session/driver usage
+session.close()
+driver.close()
+
+```
+
+
+
+
+## Qual produto possui mais conexões por Compartment? 
+
+
+```{python}
+#| label: fig-tbl_Conexoes_Products_Data
+#| fig-cap: "Tabela de Consumo de Produtos de Compartment por Data"
+#| echo: false
+#| warning: false
+#| 
+
+from neo4j import GraphDatabase
+from dotenv import load_dotenv
+import os
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# Carrega os parâmetros do arquivo env.dev
+load_dotenv()
+
+# URI examples: "neo4j://localhost", "neo4j+s://xxx.databases.neo4j.io"
+URI = os.getenv('NEO4J_URI')
+AUTH = (os.getenv('NEO4J_USER'), os.getenv('NEO4J_PASSWORD'))
+
+with GraphDatabase.driver(URI, auth=AUTH) as driver:
+    driver.verify_connectivity()
+
+driver = GraphDatabase.driver(URI, auth=AUTH)
+session = driver.session(database="neo4j")
+
+query = '''
+MATCH (c:Compartment)-[r:CONSUMIU]->(p:Product)
+RETURN c.name AS Compartment, p.name AS Product, COUNT(r) AS NumberOfConnections
+ORDER BY c.name, NumberOfConnections DESC
+'''
+
+records, summary, keys = driver.execute_query(query)
+print("The query `{query}` returned {records_count} records in {time} ms.".format(query=summary.query, records_count=len(records), time=summary.result_available_after))
+
+# Converte os registros em um DataFrame do pandas
+df = pd.DataFrame(records, columns=['Compartment', 'Product', 'NumberOfConnections'])
+
+# Cria um gráfico de barras mostrando o número de conexões por Product e Compartment
+plt.figure(figsize=(14, 8))
+sns.barplot(data=df, x='NumberOfConnections', y='Product', hue='Compartment', dodge=False)
+
+plt.title('Número de Conexões por Produto e Compartment')
+plt.xlabel('Número de Conexões')
+plt.ylabel('Produto')
+plt.legend(title='Compartment')
+plt.grid(True)
+plt.show()
+
+# session/driver usage
+session.close()
+driver.close()
+
+```

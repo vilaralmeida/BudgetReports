@@ -129,90 +129,21 @@ sudo docker restart $(sudo docker ps -a -q)
 
 ## REALIZANDO A CARGA DO BD DE GRAFO
 
+- Criar arquivo .env e incluir as variaveis NEO4J_URI, NEO4J_USER e NEO4J_PASSWORD. Exemplo:
+
 ``` 
-# Antes de executar o codigo, gerar os arquivos usage_special.csv e usage_compartment.csv
-# python showusage.py -ds 2025-02-05  -report SPECIAL -t ALMEIDA -csv 
-# python showusage.py -ds 2025-02-05  -report COMPARTMENT -t ALMEIDA -csv 
-### ANTES DE EXECUTAR GARANTIR QUE O BANCO NEO4J ESTÁ NO AR ###
-
-import seaborn as sns
-import pandas as pd
-from neo4j import GraphDatabase
-import hashlib
-import os
-
-def computeMD5hash(my_string):
-    m = hashlib.md5()
-    m.update(my_string.encode('utf-8'))
-    return m.hexdigest()
-
-# URI examples: "neo4j://localhost", "neo4j+s://xxx.databases.neo4j.io"
-URI = "neo4j://localhost"
-AUTH = ("neo4j", "PASS1234")
-
-with GraphDatabase.driver(URI, auth=AUTH) as driver:
-    driver.verify_connectivity()
-
-
-driver = GraphDatabase.driver(URI, auth=AUTH)
-session = driver.session(database="neo4j")
-
-file_compartment = "usage_compartments.csv"
-file_special = "usage_special.csv"
-file_name = "dados.csv"
-df_compartment = pd.read_csv(file_compartment)
-
-df_special = pd.read_csv(file_special)
-
-df_compartment = df_compartment[["Compartment Path", "Service", "Currency", "Cost"]] # as duas primeiras colunas do dataframe
-
-df_special = df_special.iloc[:, 0:4] # as quatro primeiras colunas do dataframe
-
-df_compartment.set_index('Service')
-df_special.set_index('Service')
-
-df = df_special.merge(df_compartment, on='Service', how='left')
-
-# Data da Consulta
-date = "05/02/2025"
-
-query = '''
-unwind $data as row
-MERGE (d:Date {date:row.Date})
-MERGE (co:Cost {cost:row.Cost, currency: row.Currency, id: row.Cost_id})
-MERGE (c:Compartment {name: row.Compartment_Path})
-MERGE (s:Service {name: row.Service})
-MERGE (r:Region {name: row.Region})
-MERGE (p:Product {sku: row.Product_SKU, name: row.Product_Name})
-MERGE (s)-[:AVAILABLE_IN]->(r)
-MERGE (s)-[:OFFERS]->(p)
-MERGE (p)-[:CONSUMED_BY]->(c)
-MERGE (c)-[:COSTS]->(co)
-MERGE (p)-[:COSTS]->(co)
-MERGE (co)-[:IN]->(d)
-'''
-
-# df_final.to_csv(file_name, sep=';', encoding='utf-8', index=False, header=True)
-
-for key, value in df.iterrows():
-    data = {
-        'Service': value['Service'],
-        'Region': value['Region'],
-        'Product_SKU': value['Product SKU'],
-        'Product_Name': value['Product Name'],
-        'Compartment_Path': value['Compartment Path'],
-        'Currency': value['Currency'],
-        'Cost': value['Cost'],
-        'Cost_id': computeMD5hash(value['Product SKU'] + value['Compartment Path']),
-        'Date': date
-    }
-    records, summary, keys = driver.execute_query(query, data=data, )
-    print("The query `{query}` returned {records_count} records in {time} ms.".format(query=summary.query, records_count=len(records),time=summary.result_available_after, ))
-
-
-
-# session/driver usage
-
-session.close()
-driver.close()
+NEO4J_URI="neo4j://localhost"
+NEO4J_USER="neo4j"
+NEO4J_PASSWORD="PASS1234"
 ``` 
+
+- Acessar o notebook carga.ipynb e modificar o parâmetro "date" para a data desejada, no formato DD/MM/AAAA. 
+
+- Executar a célula do notebook. 
+
+
+## Criando Relatório Quarto
+
+- Primeiro passo: Realizar a instalação do Quarto CLI através da seguinte url: https://quarto.org/docs/get-started/
+- Instalar extensão Quarto no VS Code (https://marketplace.visualstudio.com/items?itemName=quarto.quarto)
+- Abrir o arquivo Relatorio.qmd e clicar na opção "Preview"

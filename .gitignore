@@ -159,13 +159,13 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 
-src/*.qmd
-src/*.html
+
 src/*.csv
 .csv
 .oci
 .pem
 src/relatorios_files
+src/Relatorio_files
 src/images
 src/oracle
 rodrigo.almeida@dataprev.gov.br_2024-12-04T14_35_50.229Z.pem
