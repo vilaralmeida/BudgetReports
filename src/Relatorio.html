@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Untitled</title>
+<title>Análise Comportamento de Consumo de Recursos Oracle - ACCRO</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -45,7 +45,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Untitled</h1>
+<h1 class="title">Análise Comportamento de Consumo de Recursos Oracle - ACCRO</h1>
 </div>
 
 
@@ -64,18 +64,18 @@ ul.task-list li input[type="checkbox"] {
 
 <section id="apresentação" class="level1">
 <h1>Apresentação</h1>
-<p>O Seguinte relatório tem por propósito apresentar a evolução dos Compartments (Nuvem Oracle OCI) e produtos consumidos pelos compartments.</p>
+<p>O Seguinte relatório tem por propósito apresentar a evolução do consumo de Recursos Oracle, identificando momentos cruciais de virada de consumo que podem comprometer o cumprimento de Budgets.</p>
 <section id="como-está-a-evolução-de-consumo-de-recursos-por-compartment" class="level2">
 <h2 class="anchored" data-anchor-id="como-está-a-evolução-de-consumo-de-recursos-por-compartment">Como está a evolução de consumo de recursos por Compartment?</h2>
-<div id="cell-fig-RJ_SANDBOX__CUSTOS_IAC" class="cell" data-execution_count="1">
+<div id="cell-fig-CONSUMO_RECURSO_COMPARTMENT" class="cell" data-execution_count="1">
 <div class="cell-output cell-output-display">
-<div id="fig-rj_sandbox__custos_iac" class="quarto-float quarto-figure quarto-figure-center anchored">
+<div id="fig-consumo_recurso_compartment" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-rj_sandbox__custos_iac-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="Relatorio_files/figure-html/fig-rj_sandbox__custos_iac-output-1.png" width="957" height="524" class="figure-img">
+<div aria-describedby="fig-consumo_recurso_compartment-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="Relatorio_files/figure-html/fig-consumo_recurso_compartment-output-1.png" width="957" height="524" class="figure-img">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-rj_sandbox__custos_iac-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;1: Consumo semanal de recursos por Região de Disponibilidade do Projeto PRJ_SANDBOX_IAC - Outubro/2024
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-consumo_recurso_compartment-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Evolução de consumo de recursos por Compartment
 </figcaption>
 </figure>
 </div>
@@ -99,27 +99,112 @@ Figure&nbsp;2: Tabela de Consumo de Produtos de Compartment por Data
 <section id="qual-produto-possui-mais-conexões-por-compartment" class="level2">
 <h2 class="anchored" data-anchor-id="qual-produto-possui-mais-conexões-por-compartment">Qual produto possui mais conexões por Compartment?</h2>
 <div id="cell-fig-tbl_Conexoes_Products_Data" class="cell" data-execution_count="3">
-<div class="cell-output cell-output-stdout">
-<pre><code>The query `
-MATCH (c:Compartment)-[r:CONSUMIU]-&gt;(p:Product)
-RETURN c.name AS Compartment, p.name AS Product, COUNT(r) AS NumberOfConnections
-ORDER BY c.name, NumberOfConnections DESC
-` returned 46 records in 0 ms.</code></pre>
-</div>
 <div class="cell-output cell-output-display">
 <div id="fig-tbl_conexoes_products_data" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-tbl_conexoes_products_data-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="Relatorio_files/figure-html/fig-tbl_conexoes_products_data-output-2.png" width="1453" height="672" class="figure-img">
+<img src="Relatorio_files/figure-html/fig-tbl_conexoes_products_data-output-1.png" width="1453" height="672" class="figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-tbl_conexoes_products_data-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;3: Tabela de Consumo de Produtos de Compartment por Data
+Figure&nbsp;3: Numero de Conexões por Produto e por Data
 </figcaption>
 </figure>
 </div>
 </div>
 </div>
 </section>
+<section id="qual-custo-total-por-produto" class="level2">
+<h2 class="anchored" data-anchor-id="qual-custo-total-por-produto">Qual Custo Total por Produto?</h2>
+<div id="cell-fig-tbl_Custo_Totais_Produto" class="cell" data-execution_count="4">
+<div class="cell-output cell-output-display">
+<div id="fig-tbl_custo_totais_produto" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-tbl_custo_totais_produto-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="Relatorio_files/figure-html/fig-tbl_custo_totais_produto-output-1.png" width="1453" height="671" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-tbl_custo_totais_produto-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4: Custos Totais por Produto
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="evolução-dos-custos-por-produto-x-compartment" class="level1">
+<h1>Evolução dos Custos Por Produto x Compartment</h1>
+<div id="cell-fig-tbl_Ev_Custo_Produto_Compartment" class="cell" data-execution_count="5">
+<div class="cell-output cell-output-stdout">
+<pre><code>                                          Compartment  \
+3         ritm0021660bilhetagemapi/BilhetagemAPI_DIPP   
+2         ritm0021660bilhetagemapi/BilhetagemAPI_DIPP   
+1         ritm0021660bilhetagemapi/BilhetagemAPI_DIPP   
+0         ritm0021660bilhetagemapi/BilhetagemAPI_DIPP   
+11  ritm0023258pococrinssdiia/poc-ocr-atestado-medico   
+10  ritm0023258pococrinssdiia/poc-ocr-atestado-medico   
+9   ritm0023258pococrinssdiia/poc-ocr-atestado-medico   
+8   ritm0023258pococrinssdiia/poc-ocr-atestado-medico   
+29                        sandboxdgi/Compartment_DEST   
+28                        sandboxdgi/Compartment_DEST   
+27                        sandboxdgi/Compartment_DEST   
+26                        sandboxdgi/Compartment_DEST   
+25                        sandboxdgi/Compartment_DEST   
+24                        sandboxdgi/Compartment_DEST   
+40       sandboxdgi/Compartment_DEST/Compartment_DIBD   
+46       sandboxdgi/Compartment_DEST/Compartment_DSAN   
+72                                    sandboxoverview   
+
+                                              Product       Date  Cost  \
+3                 Oracle Analytics Cloud - Enterprise 2025-02-07  77.6   
+2             Oracle Autonomous Data Warehouse - ECPU 2025-02-07   4.2   
+1           Oracle Autonomous Database Backup Storage 2025-02-07   4.2   
+0                  Oracle Autonomous Database Storage 2025-02-07   4.2   
+11                   Block Volume - Performance Units 2025-02-07   1.4   
+10                             Block Volume - Storage 2025-02-07   1.4   
+9   Notebook Session - Compute - Standard - E4 - Core 2025-02-07   1.4   
+8   Notebook Session - Compute - Standard - E4 - M... 2025-02-07   1.4   
+29                                      Standard - E3 2025-02-07   3.8   
+28                             Standard - E3 - Memory 2025-02-07   3.8   
+27                                      Standard - E4 2025-02-07   3.8   
+26                             Standard - E4 - Memory 2025-02-07   3.8   
+25                                      Standard - E5 2025-02-07   3.8   
+24                             Standard - E5 - Memory 2025-02-07   3.8   
+40                   MySQL Database Service - Storage 2025-02-07   0.3   
+46  Container Engine for Kubernetes - Enhanced Clu... 2025-02-07  12.0   
+72   Oracle Bare Metal Cloud - 100 Mbps Load Balancer 2025-02-07   5.6   
+
+    CostDiff  
+3        0.0  
+2        0.0  
+1        0.0  
+0        0.0  
+11       0.0  
+10       0.0  
+9        0.0  
+8        0.0  
+29       0.0  
+28       0.0  
+27       0.0  
+26       0.0  
+25       0.0  
+24       0.0  
+40       0.0  
+46       0.0  
+72       0.0  </code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div id="fig-tbl_ev_custo_produto_compartment" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-tbl_ev_custo_produto_compartment-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="Relatorio_files/figure-html/fig-tbl_ev_custo_produto_compartment-output-2.png" width="1453" height="671" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-tbl_ev_custo_produto_compartment-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5: Custos Por Produto x Compartment
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
 </section>
 
 </main>

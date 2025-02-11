@@ -1,18 +1,18 @@
 ---
-title: "Relatório de Análise de Consumo de Produtos por Compartment"
+title: "Análise Comportamento de Consumo de Recursos Oracle - ACCRO"
 format: html
 ---
 
 # Apresentação
 
-O Seguinte relatório tem por propósito apresentar a evolução dos Compartments (Nuvem Oracle OCI) e produtos consumidos pelos compartments.  
+O Seguinte relatório tem por propósito apresentar a evolução do consumo de Recursos Oracle, identificando momentos cruciais de virada de consumo que podem comprometer o cumprimento de Budgets. 
 
 
 ## Como está a evolução de consumo de recursos por Compartment?
 
 ```{python}
-#| label: fig-RJ_SANDBOX__CUSTOS_IAC
-#| fig-cap: "Consumo semanal de recursos por Região de Disponibilidade do Projeto PRJ_SANDBOX_IAC - Outubro/2024"
+#| label: fig-CONSUMO_RECURSO_COMPARTMENT
+#| fig-cap: "Evolução de consumo de recursos por Compartment"
 #| echo: false
 #| warning: false
 from neo4j import GraphDatabase
@@ -146,7 +146,7 @@ driver.close()
 
 ```{python}
 #| label: fig-tbl_Conexoes_Products_Data
-#| fig-cap: "Tabela de Consumo de Produtos de Compartment por Data"
+#| fig-cap: "Numero de Conexões por Produto e por Data"
 #| echo: false
 #| warning: false
 #| 
@@ -178,7 +178,6 @@ ORDER BY c.name, NumberOfConnections DESC
 '''
 
 records, summary, keys = driver.execute_query(query)
-print("The query `{query}` returned {records_count} records in {time} ms.".format(query=summary.query, records_count=len(records), time=summary.result_available_after))
 
 # Converte os registros em um DataFrame do pandas
 df = pd.DataFrame(records, columns=['Compartment', 'Product', 'NumberOfConnections'])
@@ -199,3 +198,135 @@ session.close()
 driver.close()
 
 ```
+
+
+## Qual Custo Total por Produto? 
+
+```{python}
+#| label: fig-tbl_Custo_Totais_Produto
+#| fig-cap: "Custos Totais por Produto"
+#| echo: false
+#| warning: false
+#| 
+from neo4j import GraphDatabase
+from dotenv import load_dotenv
+import os
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# Carrega os parâmetros do arquivo env.dev
+load_dotenv()
+
+# URI examples: "neo4j://localhost", "neo4j+s://xxx.databases.neo4j.io"
+URI = os.getenv('NEO4J_URI')
+AUTH = (os.getenv('NEO4J_USER'), os.getenv('NEO4J_PASSWORD'))
+
+with GraphDatabase.driver(URI, auth=AUTH) as driver:
+    driver.verify_connectivity()
+
+driver = GraphDatabase.driver(URI, auth=AUTH)
+session = driver.session(database="neo4j")
+
+query = '''
+MATCH (p:Product)<-[r:CONSUMIU]-(c:Compartment)
+RETURN p.name AS Product, SUM(r.cost) AS TotalCost
+ORDER BY TotalCost DESC
+'''
+
+records, summary, keys = driver.execute_query(query)
+
+
+# Converte os registros em um DataFrame do pandas
+df = pd.DataFrame(records, columns=['Product', 'TotalCost'])
+
+# Cria um gráfico de barras mostrando os custos por Product
+plt.figure(figsize=(14, 8))
+sns.barplot(data=df, x='TotalCost', y='Product', palette='viridis')
+
+plt.title('Custos Totais por Produto')
+plt.xlabel('Custo Total')
+plt.ylabel('Produto')
+plt.grid(True)
+plt.show()
+
+# session/driver usage
+session.close()
+driver.close()
+``` 
+
+# Evolução dos Custos Por Produto x Compartment
+
+```{python}
+#| label: fig-tbl_Ev_Custo_Produto_Compartment
+#| fig-cap: "Custos Por Produto x Compartment"
+#| echo: false
+#| warning: false
+#| 
+from neo4j import GraphDatabase
+from dotenv import load_dotenv
+import os
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# Carrega os parâmetros do arquivo env.dev
+load_dotenv()
+
+# URI examples: "neo4j://localhost", "neo4j+s://xxx.databases.neo4j.io"
+URI = os.getenv('NEO4J_URI')
+AUTH = (os.getenv('NEO4J_USER'), os.getenv('NEO4J_PASSWORD'))
+
+with GraphDatabase.driver(URI, auth=AUTH) as driver:
+    driver.verify_connectivity()
+
+driver = GraphDatabase.driver(URI, auth=AUTH)
+session = driver.session(database="neo4j")
+
+query = '''
+MATCH (c:Compartment)-[r:CONSUMIU]->(p:Product)
+RETURN c.name AS Compartment, p.name AS Product, r.date AS Date, r.cost AS Cost
+ORDER BY c.name, r.date DESC
+'''
+
+records, summary, keys = driver.execute_query(query)
+
+
+# Converte os registros em um DataFrame do pandas
+df = pd.DataFrame(records, columns=['Compartment', 'Product', 'Date', 'Cost'])
+
+# Converte a coluna Date para o tipo datetime
+df['Date'] = pd.to_datetime(df['Date'], format="%d/%m/%Y")
+
+# Agrupa por Compartment e seleciona os dois registros mais recentes
+df_recent = df.groupby('Product').head(2)
+
+# Ordena por Compartment, Product e Date
+df_recent = df_recent.sort_values(by=['Compartment', 'Product', 'Date'])
+
+# Calcula a diferença de custo entre os dois registros mais recentes
+df_recent['CostDiff'] = df_recent.groupby(['Compartment', 'Product'])['Cost'].diff()
+
+# Remove linhas com valores NaN resultantes do cálculo de diff
+df_recent = df_recent.dropna(subset=['CostDiff'])
+
+print(df_recent)
+
+# Cria um gráfico de barras mostrando a diferença de custo por Product e Compartment
+plt.figure(figsize=(14, 8))
+sns.barplot(data=df_recent, x='CostDiff', y='Product', hue='Compartment', palette='viridis')
+
+plt.title('Diferença de Custo por Produto e Compartment para dois dias consecutivos')
+plt.xlabel('Diferença de Custo entre dois dias consecutivos')
+plt.ylabel('Produto')
+plt.legend(title='Compartment')
+plt.grid(True)
+plt.show()
+
+
+# session/driver usage
+session.close()
+driver.close()
+
+```
+
